@@ -1,0 +1,60 @@
+﻿@model IEnumerable<AnimalAdoptionApp.Domain.Advert>
+@using Microsoft.AspNetCore.Identity
+@using AnimalAdoptionApp.Domain
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<h2>İlanlar</h2>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <a asp-action="Create" class="btn btn-primary">Yeni İlan Ekle</a>
+}
+else
+{
+    <p><em>İlan eklemek için giriş yapmalısınız.</em></p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Başlık</th>
+            <th>Yaş</th>
+            <th>Kilo</th>
+            <th>Cinsiyet</th>
+            <th>Tarih</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var advert in Model)
+        {
+            <tr>
+                <td>@advert.Title</td> <!-- Başlık burada doğru şekilde gösteriliyor -->
+                <td>@advert.Age</td>
+                <td>@advert.Kg</td>
+                <td>@advert.Gender</td>
+                <td>@advert.Date.ToShortDateString()</td>
+                <td>
+                    <a class="btn btn-info btn-sm" asp-action="Detail" asp-route-id="@advert.Id">Detay</a>
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <form asp-action="Interest" method="post" asp-route-id="@advert.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-success btn-sm">İlgilen</button>
+                        </form>
+
+                        @if ((await UserManager.GetUserAsync(User)) is User currentUser &&
+                           (await UserManager.IsInRoleAsync(currentUser, "Moderators") || await UserManager.IsInRoleAsync(currentUser, "Administrators")))
+                        {
+                            <form asp-action="Delete" asp-route-id="@advert.Id" method="post" style="display:inline;" onsubmit="return confirm('Silmek istediğine emin misin?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                            </form>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

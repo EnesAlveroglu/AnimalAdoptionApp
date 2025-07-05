@@ -3,33 +3,29 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
-
-
+using AnimalAdoptionApp.Domain;
+using System.ComponentModel.DataAnnotations;
 namespace AnimalAdoptionApp.Domain;
 
-public enum Gender
-{
-    Erkek,
-    Disi
-}
+
 public class Advert
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public Guid LineageId { get; set; }
     public string? Description { get; set; }
-    public required byte[] Photo { get; set; }
+    public  byte[]? Photo { get; set; }
     public DateTime Date { get; set; }
     public decimal Kg { get; set; }
     public required string Age { get; set; }
     public required Gender Gender { get; set; }
     public User? User { get; set; }
-    public Lineage? Lineage { get; set; }
 
     [NotMapped]
     public IFormFile? PhotoFile { get; set; }
     public int Displays { get; set; } //ilana tıklandığı zaman bir arttırılır.
     public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>(); //ilanın yorumları
+    [Required]
+    public string Title { get; set; } = string.Empty;
 
 }
 

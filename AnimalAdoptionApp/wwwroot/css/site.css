@@ -29,3 +29,53 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.register-page {
+    background-image: url('/images/banner.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0 40px; /* Saðdan biraz boþluk býrakýr */
+    display: flex;
+    justify-content: flex-start; /* Formu sola yasla */
+    align-items: center;
+    position: relative;
+}
+
+    .register-page > div {
+        background-color: rgba(255, 255, 255, 0.85);
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 1;
+    }
+
+.login-page {
+    background-image: url('/images/banner.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+}
+
+    .login-page > div {
+        background-color: rgba(255, 255, 255, 0.85);
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 1;
+    }

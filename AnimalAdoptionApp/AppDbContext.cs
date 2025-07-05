@@ -39,14 +39,20 @@ Kullanıcı Google, Facebook gibi harici servislerle giriş yaptıysa, o servisi
 */
 
 {
-    protected override void OnModelCreating(ModelBuilder builder) //modeli databasede oluştururken bu methodu kullan. ve configurationları çağırttırıyoruz aşağıdaki method ile.
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder); 
-        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly); //configurationları çağırttırıyoruz bu method ile.
+        base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        //  İlan silinirse yorumlar da silinsin
+        builder.Entity<Comment>()
+            .HasOne(c => c.Advert)
+            .WithMany(a => a.Comments)
+            .HasForeignKey(c => c.AdvertId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
-     
+
     //Userın DbSeti ve Rolün DbSeti zaten atasından geliyor onları koymamıza gerek yok.
-    public required DbSet<Lineage> Lineages { get; set; }
     public required DbSet<Advert> Adverts { get; set; }
     public required DbSet<Comment> Comments { get; set; }
 }

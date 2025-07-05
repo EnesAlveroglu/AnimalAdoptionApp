@@ -3,6 +3,7 @@ using System;
 using AnimalAdoptionApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AnimalAdoptionApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250704152737_AddTitleToAdvert")]
+    partial class AddTitleToAdvert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,6 +50,9 @@ namespace AnimalAdoptionApp.Migrations
                     b.Property<decimal>("Kg")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid>("LineageId")
+                        .HasColumnType("uuid");
+
                     b.Property<byte[]>("Photo")
                         .HasColumnType("bytea");
 
@@ -61,6 +67,8 @@ namespace AnimalAdoptionApp.Migrations
 
                     b.HasIndex("Date")
                         .IsDescending();
+
+                    b.HasIndex("LineageId");
 
                     b.HasIndex("UserId");
 
@@ -98,6 +106,23 @@ namespace AnimalAdoptionApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("comments", (string)null);
+                });
+
+            modelBuilder.Entity("AnimalAdoptionApp.Domain.Lineage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Lineages", (string)null);
                 });
 
             modelBuilder.Entity("AnimalAdoptionApp.Domain.Role", b =>
@@ -304,11 +329,19 @@ namespace AnimalAdoptionApp.Migrations
 
             modelBuilder.Entity("AnimalAdoptionApp.Domain.Advert", b =>
                 {
+                    b.HasOne("AnimalAdoptionApp.Domain.Lineage", "Lineage")
+                        .WithMany("Adverts")
+                        .HasForeignKey("LineageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("AnimalAdoptionApp.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Lineage");
 
                     b.Navigation("User");
                 });
@@ -318,7 +351,7 @@ namespace AnimalAdoptionApp.Migrations
                     b.HasOne("AnimalAdoptionApp.Domain.Advert", "Advert")
                         .WithMany("Comments")
                         .HasForeignKey("AdvertId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AnimalAdoptionApp.Domain.User", "User")
@@ -386,6 +419,11 @@ namespace AnimalAdoptionApp.Migrations
             modelBuilder.Entity("AnimalAdoptionApp.Domain.Advert", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("AnimalAdoptionApp.Domain.Lineage", b =>
+                {
+                    b.Navigation("Adverts");
                 });
 #pragma warning restore 612, 618
         }

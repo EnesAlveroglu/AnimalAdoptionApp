@@ -1,0 +1,64 @@
+﻿@model AnimalAdoptionApp.Domain.Advert
+
+@{
+    ViewBag.Title = "Yeni İlan Ekle";
+}
+
+<h2>Yeni İlan</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <p>Model geçersiz. Eksik veya hatalı alanlar:</p>
+        <ul>
+            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@modelError.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Başlık</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Age">Yaş</label>
+        <input asp-for="Age" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Kg">Kg</label>
+        <input asp-for="Kg" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Gender">Cinsiyet</label>
+        <select asp-for="Gender" class="form-control">
+            <option value="">Seçiniz</option>
+            <option value="Erkek">Erkek</option>
+            <option value="Disi">Dişi</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description">Açıklamalar</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhotoFile">Fotoğraf</label>
+        <input asp-for="PhotoFile" type="file" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Ekle</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
